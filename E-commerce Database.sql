@@ -1,30 +1,39 @@
-SELECT * FROM customers 
-WHERE city = 'Delhi' ;
+SELECT category,
+	   COUNT(*) AS total_product
+FROM products
+GROUP BY category ;
 
-SELECT * FROM products
-WHERE price > 30000 ;
+SELECT category,
+	   MAX(price) AS max_value
+FROM products
+GROUP BY category ;
 
-SELECT * FROM orders 
-WHERE quantity > 1 ;
+SELECT category,
+	   MIN(price) AS min_val
+FROM products
+GROUP BY category ;
 
-SELECT * FROM products
-WHERE category = 'Electronics' AND
-price > 20000 ;
+SELECT category,
+	   AVG(price) AS avg_price
+FROM products
+GROUP BY category ;
 
-SELECT * FROM customers
-WHERE city IN('Delhi','Patna') ;
+SELECT category,
+	   SUM(price) as total_val
+FROM products 
+GROUP BY category ;
 
-SELECT * FROM customers
-WHERE age BETWEEN 25 AND 35 ;
+SELECT city,
+	   COUNT(*) AS total_customer
+FROM customers
+GROUP BY city ;
 
-SELECT * FROM products 
-WHERE product LIKE 'H%' ;
+SELECT city,
+	   AVG(age) AS avg_age
+FROM customers
+GROUP BY city ;
 
-SELECT * FROM customers
-WHERE name LIKE '%a' ;
-
-SELECT * FROM products 
-WHERE price BETWEEN 2500 AND 10000 ;
-
-SELECT * FROM customers
-WHERE city != 'Delhi' ;
+SELECT city,
+	   MAX(age) AS max_age
+FROM customers
+GROUP BY city ;
