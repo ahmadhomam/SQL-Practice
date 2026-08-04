@@ -38,3 +38,31 @@ GROUP BY
 	c.customer_id,
 	c.name,
 	c.city ;
+
+
+SELECT c.name,
+	   c.city,
+	   SUM(o.quantity * p.price) AS amount
+FROM orders AS o
+JOIN customers AS c
+	ON o.customer_id = c.customer_id
+JOIN products AS p
+	ON p.product_id = o.product_id
+GROUP BY
+	c.name,
+	c.city
+ORDER BY amount DESC LIMIT 3 ;
+
+SELECT * FROM products
+SELECT * FROM customers
+SELECT * FROM orders
+
+
+
+SELECT c.customer_id,
+	   c.name,
+	   o.order_id
+FROM customers AS c
+LEFT JOIN orders AS o
+	ON c.customer_id  =  o.customer_id ;
+
