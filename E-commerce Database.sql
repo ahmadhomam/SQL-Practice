@@ -103,3 +103,39 @@ GROUP BY c.customer_id,
 		 c.name  ;
 
 
+
+SELECT category,
+	   SUM(price) AS total_value
+FROM products
+GROUP BY category  
+HAVING SUM(price) > 40000 ;
+
+SELECT c.customer_id,
+	   c.name,
+	   COUNT(o.order_id) AS total_order
+FROM customers AS c
+LEFT JOIN orders AS o
+	ON c.customer_id = o.customer_id
+GROUP BY c.customer_id,
+		 c.name 
+HAVING COUNT(o.order_id) > 1 ;
+
+SELECT city,
+	   COUNT(city) AS customer_count
+FROM customers
+GROUP BY city 
+HAVING COUNT(city) > 1 ;
+
+SELECT p.product_id,
+	   p.product,
+	   SUM(p.price * o.quantity) AS revenue
+FROM products AS p
+LEFT JOIN orders AS o
+	ON o.product_id  = p.product_id
+GROUP BY p.product_id,
+		 p.product 
+HAVING SUM(p.price * o.quantity) > 10000 ;
+
+
+
+
