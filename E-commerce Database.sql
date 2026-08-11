@@ -162,10 +162,51 @@ SELECT o.order_id,
 	   SUM(o.quantity * p.price) AS revenue,
 	   CASE 
 	   		WHEN SUM(o.quantity * p.price) < 5000 THEN 'Low'
-			WHEN SUM(o.quantity * p.price) <=30000 AND SUM(o.quantity * p.price) >= 5000 THEN 'Medium'
+			WHEN SUM(o.quantity * p.price) <=30000 THEN 'Medium'
 			ELSE 'High'
 	   END AS revenue_category 
 FROM products AS p
 JOIN orders AS o
 	ON o.product_id = p.product_id 
 GROUP BY o.order_id ;
+
+
+SELECT 
+	SUM(
+		CASE
+			WHEN p.price > 30000
+			THEN o.quantity * p.price
+			ELSE 0
+		END
+	) AS premium_revenue,
+	SUM(
+		CASE
+			WHEN p.price <= 30000
+			THEN o.quantity * p.price
+			ELSE 0
+		END
+	) AS non_premium_revenue
+FROM orders AS o
+JOIN products AS p
+	ON o.product_id = p.product_id ;
+
+
+
+SELECT
+    c.name,
+    SUM(o.quantity * p.price) AS total_spent,
+    CASE
+        WHEN SUM(o.quantity * p.price) < 10000
+            THEN 'Low Value'
+        WHEN SUM(o.quantity * p.price) <= 50000
+            THEN 'Medium Value'
+        ELSE 'High Value'
+    END AS customer_segment
+FROM customers AS c
+LEFT JOIN orders AS o
+    ON c.customer_id = o.customer_id
+LEFT JOIN products AS p
+    ON o.product_id = p.product_id
+GROUP BY
+    c.customer_id,
+    c.name;
