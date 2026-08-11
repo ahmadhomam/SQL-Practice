@@ -138,4 +138,34 @@ HAVING SUM(p.price * o.quantity) > 10000 ;
 
 
 
+SELECT name,
+	   age,
+	   CASE
+	   	   WHEN age<25 THEN 'Young'
+		   WHEN age > 30 THEN 'Senior'
+		   ELSE  'Mid'
+	   END AS age_group
+FROM customers ;
+		
 
+SELECT product,
+	   price,
+	   CASE
+	   	  WHEN price < 5000 THEN 'Budget'
+		  WHEN price <= 30000 AND price >= 5000 THEN 'Mid-range'
+		  ELSE 'Premium'
+	   END AS price_category 
+FROM products ;
+
+
+SELECT o.order_id,
+	   SUM(o.quantity * p.price) AS revenue,
+	   CASE 
+	   		WHEN SUM(o.quantity * p.price) < 5000 THEN 'Low'
+			WHEN SUM(o.quantity * p.price) <=30000 AND SUM(o.quantity * p.price) >= 5000 THEN 'Medium'
+			ELSE 'High'
+	   END AS revenue_category 
+FROM products AS p
+JOIN orders AS o
+	ON o.product_id = p.product_id 
+GROUP BY o.order_id ;
