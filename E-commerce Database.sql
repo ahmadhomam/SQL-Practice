@@ -187,26 +187,73 @@ SELECT
 		END
 	) AS non_premium_revenue
 FROM orders AS o
+JOIN produc
+
+
+-- finding the spending of the customers and then grouping them according to their spending
+-- this is the query for creating the segment a/q to spent
+SELECT c.name,
+	   SUM(o.quantity * p.price) AS total_spent,
+	   CASE 
+	   		WHEN SUM(o.quantity * p.price) < 10000 THEN 'Low'
+			WHEN SUM(o.quantity * p.price) <= 50000 THEN 'Medium'
+			WHEN SUM(o.quantity * p.price) >50000 THEN 'High'
+		END AS segment 
+FROM customers AS c
+LEFT JOIN orders AS o
+	ON o.customer_id = c.customer_id
+LEFT JOIN products AS p
+	ON o.product_id = p.product_id
+GROUP BY c.customer_id,
+		 c.name ;
+
+
+SELECT ...
+FROM (
+	SELECT c.name,
+	   SUM(o.quantity * p.price) AS total_spent,
+	   CASE 
+	   		WHEN SUM(o.quantity * p.price) < 10000 THEN 'Low'
+			WHEN SUM(o.quantity * p.price) <= 50000 THEN 'Medium'
+			WHEN SUM(o.quantity * p.price) >50000 THEN 'High'
+		END AS segment 
+FROM customers AS c
+LEFT JOIN orders AS o
+	ON o.customer_id = c.customer_id
+LEFT JOIN products AS p
+	ON o.product_id = p.product_id
+GROUP BY c.customer_id,
+		 c.name 
+) AS customer_segments 
+
+
+
+-- subqueries with conditional aggregators
+SELECT SUM(
+	CASE 
+		WHEN p.category = 'Electronics'
+		THEN (o.quantity * p.price)
+		ELSE 0
+	END
+) AS electronics_revenue,
+
+SUM (
+	CASE 
+		WHEN p.category = 'Fashion'
+		THEN (o.quantity*p.price)
+		ELSE 0
+	END
+) AS fashion_revenue ,
+
+COUNT(
+	CASE
+		WHEN p.category = 'Electronics'
+		THEN 1
+		ELSE 0
+	END
+) AS total_electronics_order 
+FROM orders AS o
 JOIN products AS p
 	ON o.product_id = p.product_id ;
 
 
-
-SELECT
-    c.name,
-    SUM(o.quantity * p.price) AS total_spent,
-    CASE
-        WHEN SUM(o.quantity * p.price) < 10000
-            THEN 'Low Value'
-        WHEN SUM(o.quantity * p.price) <= 50000
-            THEN 'Medium Value'
-        ELSE 'High Value'
-    END AS customer_segment
-FROM customers AS c
-LEFT JOIN orders AS o
-    ON c.customer_id = o.customer_id
-LEFT JOIN products AS p
-    ON o.product_id = p.product_id
-GROUP BY
-    c.customer_id,
-    c.name;
