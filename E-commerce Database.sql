@@ -257,3 +257,21 @@ JOIN products AS p
 	ON o.product_id = p.product_id ;
 
 
+SELECT c.name,
+	   COUNT(o.order_id) AS total_orders,
+	   COUNT(
+		CASE
+			WHEN (o.quantity * p.price) > 30000 
+			THEN 1
+		END
+	   ) AS high_value_orders
+FROM customers AS c
+LEFT JOIN orders as o
+	ON o.customer_id = c.customer_id
+LEFT JOIN products as p
+	ON o.product_id = p.product_id
+GROUP BY c.customer_id,
+		 c.name ;
+	  
+
+
