@@ -272,6 +272,30 @@ LEFT JOIN products as p
 	ON o.product_id = p.product_id
 GROUP BY c.customer_id,
 		 c.name ;
-	  
+		 
+
+SELECT product,
+	   price
+FROM products 
+WHERE price > (
+	SELECT AVG(price)
+	FROM products
+) ;
 
 
+SELECT name
+FROM customers
+WHERE customer_id NOT IN(
+	SELECT customer_id
+	FROM orders
+) ;
+
+
+SELECT product,
+	   price 
+FROM products 
+WHERE price > (
+	SELECT MAX(price)
+	FROM products 
+	G
+)
