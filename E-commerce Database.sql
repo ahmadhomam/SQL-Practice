@@ -291,11 +291,33 @@ WHERE customer_id NOT IN(
 ) ;
 
 
+
 SELECT product,
 	   price 
 FROM products 
 WHERE price > (
-	SELECT MAX(price)
+	SELECT AVG(price)
 	FROM products 
-	G
+	WHERE category = 'Electronics' 
+) ;
+
+
+SELECT c.customer_id,
+	   c.name,
+	   COUNT(o.order_id) AS order_count
+FROM customers AS c
+JOIN orders AS o
+	ON o.customer_id = c.customer_id
+GROUP BY c.customer_id,
+		 c.name
+HAVING COUNT(o.order_id) > 1 ;
+
+
+SELECT product,
+	   price
+FROM products 
+WHERE price > (
+	SELECT AVG(price)
+	FROM products
 )
+AND category = 'Electronics' ;
