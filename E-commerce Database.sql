@@ -301,7 +301,7 @@ WHERE price > (
 	WHERE category = 'Electronics' 
 ) ;
 
-
+-- method 1 : using JOIN
 SELECT c.customer_id,
 	   c.name,
 	   COUNT(o.order_id) AS order_count
@@ -310,7 +310,24 @@ JOIN orders AS o
 	ON o.customer_id = c.customer_id
 GROUP BY c.customer_id,
 		 c.name
-HAVING COUNT(o.order_id) > 1 ;
+HAVING COUNT(o.order_id) > 0 ;
+
+-- method 2 : using IN subqueries
+SELECT c.name
+FROM customers AS c
+WHERE customer_id IN(
+	SELECT customer_id 
+	FROM orders
+) ;
+
+--method 3 : using EXSIST subqueries 
+SELECT c.name
+FROM customers AS c
+WHERE EXISTS(
+	SELECT 1
+	FROM orders AS o
+	WHERE o.customer_id = c.customer_id
+) ;
 
 
 SELECT product,
