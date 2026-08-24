@@ -338,3 +338,27 @@ WHERE price > (
 	FROM products
 )
 AND category = 'Electronics' ;
+
+
+SELECT segment,
+	   COUNT(*) AS customer_count
+FROM ( 
+SELECT
+	c.customer_id,
+	c.name,
+	COALESCE(SUM(p.price*o.quantity),0) AS total_spent,
+	CASE
+		WHEN COALESCE(SUM(p.price*o.quantity),0) < 10000
+		THEN 'Low'
+		WHEN COALESCE(SUM(p.price*o.quantity),0) <= 50000
+		THEN 'Medium'
+		ELSE 'High'
+	END AS segment
+FROM customers AS c
+LEFT JOIN orders AS o
+	ON c.customer_id = o.customer_id
+LEFT JOIN products AS p
+	ON p.product_id = o.product_id
+GROUP BY c.customer_id,c.name
+) AS customer_segment
+GROUP BY segment
