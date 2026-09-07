@@ -362,3 +362,77 @@ LEFT JOIN products AS p
 GROUP BY c.customer_id,c.name
 ) AS customer_segment
 GROUP BY segment
+
+-- SQL QUERY -1 (KN ACADEMY CODING ASSESMENT)
+SELECT d.DEPARTMENT_NAME,
+	   AVG(e.SALARY) AS DEPT_AVG
+FROM Departments d
+LEFT JOIN Employees e
+	ON d.DEPARTMENT_ID = e.DEPARTMENT_ID
+GROUP BY d.DEPARTMENT_NAME
+HAVING AVG(e.SALARY) > (
+	SELECT AVG(SALARY)
+	FROM Employees
+) ;
+
+-- SQL QUERY -2 (KN ACADEMY)
+SELECT NAME,
+	   DEPARTMENT,
+	   SALARY
+FROM Employees E1
+WHERE SALARY >= (
+	SELECT MAX(E2.SALARY)
+	FROM Employees E2 
+	WHERE E2.DEPARTMENT = E1.DEPARTMENT
+) ;
+
+
+-- SQL QUERY -1(TOP ONE)
+-- REMEMBER TO ASK YOURSELF IS THE JOIN CREATED DUPLICATES
+-- ALWAYS PAY ATTENTION TO WHAT EXACTLY QUESTION WANTS
+--      (ASKING FOR ORDER >1 OR ORDERED ITEM > 1)**
+SELECT c.CUSTOMER_NAME,
+	   SUM(oi.QUANTITY) AS total_orders,
+	   SUM(oi.PRICE * oi.QUANTITY) AS total_spend,
+	   COUNT(DISTINCT oi.PRODUCT_NAME) AS dist_item
+FROM customers c
+JOIN orders o 
+	ON c.CUSTOMER_ID = o.CUSTOMER_ID
+JOIN order_items oi
+	ON oi.ORDER_ID = o.ORDER_ID
+WHERE c.CITY = 'NEW YORK' 
+GROUP BY c.CUSTOMER_NAME, c.CUSTOMER_ID
+HAVING SUM(oi.QUANTITY) > 1   ;
+
+
+-- New York customers who bought at least 2 different type products, 
+-- with distinct products, total units, and total spending.
+SELECT c.CUSTOMER_NAME,
+	   COUNT(DISTINCT oi.PRODUCT_NAME) AS distinct_products,
+	   SUM(oi.quantity) AS total_units,
+	   SUM(oi.quantity * oi.PRICE) AS total_spending
+FROM customers c
+JOIN orders o 
+	ON c.CUSTOMER_ID = o.CUSTOMER_ID
+JOIN order_items oi
+	ON oi.ORDER_ID = o.ORDER_ID
+WHERE c.CITY = 'NEW YORK'
+GROUP BY c.CUSTOMER_NAME, c.CUSTOMER_ID
+HAVING COUNT(DISTINCT oi.PRODUCT_NAME) >= 2 ;
+
+
+-- Find customers who placed at least 2 different orders, 
+-- but purchased fewer than 4 total units.
+SELECT c.CUSTOMER_NAME,
+	   COUNT(DISTINCT oi.ORDER_ID) AS total_order,
+	   SUM(oi.QUANTITY) AS total_units
+FROM customers c
+JOIN orders o 
+	ON c.CUSTOMER_ID = o.CUSTOMER_ID
+JOIN order_items oi
+	ON oi.ORDER_ID = o.ORDER_ID
+GROUP BY c.CUSTOMER_ID, c.CUSTOMER_NAME
+HAVING COUNT(DISTINCT oi.ORDER_ID) >= 2 AND
+SUM(oi.QUANTITY) < 4 ;
+
+
